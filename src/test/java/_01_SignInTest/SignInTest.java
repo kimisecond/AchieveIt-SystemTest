@@ -42,7 +42,6 @@ public class SignInTest {
 				{"jun29@pingmao.net", "password", false},
 				{"jun28@pingmao.net", "", false},
 				{"jun28@pingmao.net", "passwd", false}
-
 		});
 	}
 
