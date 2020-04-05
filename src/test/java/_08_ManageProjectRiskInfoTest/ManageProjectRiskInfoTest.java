@@ -50,16 +50,9 @@ public class ManageProjectRiskInfoTest {
 	public static Collection<Object[]> testData() {
 		return Arrays.asList(new Object[][]{
 				{true, "ST", "需求变更", "M", "M", "沟通", "已识别", "SYKJ-20200201-0000", "3", "SYKJ-20200201-0000"},
-				{false, "", "需求变更", "M", "M", "沟通", "已识别", "SYKJ-20200201-0000", "3", "SYKJ-20200201-0000"},
+				{false, "ST", "", "M", "M", "沟通", "已识别", "", "3", "SYKJ-20200201-0000"},
 				{false, "ST", "", "M", "M", "沟通", "已识别", "SYKJ-20200201-0000", "3", "SYKJ-20200201-0000"},
-				{false, "ST", "需求变更", "", "M", "沟通", "已识别", "SYKJ-20200201-0000", "3", "SYKJ-20200201-0000"},
-				{false, "ST", "需求变更", "M", "", "沟通", "已识别", "SYKJ-20200201-0000", "3", "SYKJ-20200201-0000"},
-				{false, "ST", "需求变更", "M", "M", "", "已识别", "SYKJ-20200201-0000", "3", "SYKJ-20200201-0000"},
-				{false, "ST", "需求变更", "M", "M", "沟通", "", "SYKJ-20200201-0000", "3", "SYKJ-20200201-0000"},
-				{false, "ST", "需求变更", "M", "M", "沟通", "已识别", "", "3", "SYKJ-20200201-0000"},
-				{false, "ST", "需求变更", "M", "M", "沟通", "已识别", "SYKJ-20200201-0000", "7", "SYKJ-20200201-0000"},
-				{false, "ST", "需求变更", "M", "M", "沟通", "已识别", "SYKJ-20200201-0000", "", "SYKJ-20200201-0000"},
-				{false, "ST", "需求变更", "M", "M", "沟通", "已识别", "SYKJ-20200201-0000", "3", ""}
+				{false, "ST", "需求变更", "M", "M", "", "已识别", "SYKJ-20200201-0000", "3", ""},
 		});
 	}
 
@@ -172,110 +165,119 @@ public class ManageProjectRiskInfoTest {
 			Assert.fail("Form not opened.");
 		}
 
-		if (riskType.length() != 0) {
-			try {
-				wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择风险类型')]")));
-			} catch (TimeoutException e) {
-				Assert.fail("Risk type field not found.");
-			}
-			WebElement riskTypeField = driver.findElement(By.xpath("//div/div[contains(text(), '选择风险类型')]/../input"));
 
-			riskTypeField.sendKeys(riskType);
-			riskTypeField.sendKeys(Keys.ENTER);
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择风险类型')]")));
+		} catch (TimeoutException e) {
+			Assert.fail("Risk type field not found.");
 		}
+		WebElement riskTypeField = driver.findElement(By.xpath("//div/div[contains(text(), '选择风险类型')]/../input"));
 
-		if (riskDescription.length() != 0) {
-			try {
-				wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@placeholder='描述']")));
-			} catch (TimeoutException e) {
-				Assert.fail("Risk description field not found.");
-			}
-			WebElement riskDescriptionField = driver.findElement(By.xpath("//input[@placeholder='描述']"));
+		riskTypeField.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		riskTypeField.sendKeys(Keys.DELETE);
+		riskTypeField.sendKeys(riskType);
+		riskTypeField.sendKeys(Keys.ENTER);
 
-			riskDescriptionField.sendKeys(riskDescription);
+
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@placeholder='描述']")));
+		} catch (TimeoutException e) {
+			Assert.fail("Risk description field not found.");
 		}
+		WebElement riskDescriptionField = driver.findElement(By.xpath("//input[@placeholder='描述']"));
 
-		if (riskLevel.length() != 0) {
-			try {
-				wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择风险级别')]")));
-			} catch (TimeoutException e) {
-				Assert.fail("Risk level field not found.");
-			}
-			WebElement riskLevelField = driver.findElement(By.xpath("//div[contains(text(), '选择风险级别')]/../input"));
+		riskDescriptionField.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		riskDescriptionField.sendKeys(Keys.DELETE);
+		riskDescriptionField.sendKeys(riskDescription);
 
-			riskLevelField.sendKeys(riskLevel);
-			riskLevelField.sendKeys(Keys.ENTER);
+
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择风险级别')]")));
+		} catch (TimeoutException e) {
+			Assert.fail("Risk level field not found.");
 		}
+		WebElement riskLevelField = driver.findElement(By.xpath("//div[contains(text(), '选择风险级别')]/../input"));
 
-		if (riskImpactLevel.length() != 0) {
-			try {
-				wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择风险影响度')]")));
-			} catch (TimeoutException e) {
-				Assert.fail("Risk impact level field not found.");
-			}
-			WebElement riskImpactLevelField = driver.findElement(By.xpath("//div[contains(text(), '选择风险影响度')]"));
+		riskLevelField.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		riskLevelField.sendKeys(Keys.DELETE);
+		riskLevelField.sendKeys(riskLevel);
+		riskLevelField.sendKeys(Keys.ENTER);
 
-			riskImpactLevelField.sendKeys(riskImpactLevel);
-			riskImpactLevelField.sendKeys(Keys.ENTER);
+
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择风险影响度')]")));
+		} catch (TimeoutException e) {
+			Assert.fail("Risk impact level field not found.");
 		}
+		WebElement riskImpactLevelField = driver.findElement(By.xpath("//div[contains(text(), '选择风险影响度')]"));
 
-		if (riskStrategy.length() != 0) {
-			try {
-				wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@placeholder='策略']")));
-			} catch (TimeoutException e) {
-				Assert.fail("Risk strategy field not found.");
-			}
-			WebElement riskStrategyField = driver.findElement(By.xpath("//input[@placeholder='策略']"));
+		riskImpactLevelField.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		riskImpactLevelField.sendKeys(Keys.DELETE);
+		riskImpactLevelField.sendKeys(riskImpactLevel);
+		riskImpactLevelField.sendKeys(Keys.ENTER);
 
-			riskStrategyField.sendKeys(riskStrategy);
+
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@placeholder='策略']")));
+		} catch (TimeoutException e) {
+			Assert.fail("Risk strategy field not found.");
 		}
+		WebElement riskStrategyField = driver.findElement(By.xpath("//input[@placeholder='策略']"));
 
-		if (riskStatus.length() != 0) {
-			try {
-				wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择风险状态')]")));
-			} catch (TimeoutException e) {
-				Assert.fail("Risk status field not found.");
-			}
-			WebElement riskStatusField = driver.findElement(By.xpath("//div[contains(text(), '选择风险状态')]/../input"));
+		riskStrategyField.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		riskStrategyField.sendKeys(Keys.DELETE);
+		riskStrategyField.sendKeys(riskStrategy);
 
-			riskStatusField.sendKeys(riskStatus);
-			riskStatusField.sendKeys(Keys.ENTER);
+
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择风险状态')]")));
+		} catch (TimeoutException e) {
+			Assert.fail("Risk status field not found.");
 		}
+		WebElement riskStatusField = driver.findElement(By.xpath("//div[contains(text(), '选择风险状态')]/../input"));
 
-		if (riskFollowingFrequency.length() != 0) {
-			try {
-				wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@placeholder='跟踪频度']")));
-			} catch (TimeoutException e) {
-				Assert.fail("Risk following frequency field not found.");
-			}
-			WebElement riskFollowingFrequencyField = driver.findElement(By.xpath("//input[@placeholder='跟踪频度']"));
+		riskStrategyField.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		riskStrategyField.sendKeys(Keys.DELETE);
+		riskStatusField.sendKeys(riskStatus);
+		riskStatusField.sendKeys(Keys.ENTER);
 
-			riskFollowingFrequencyField.sendKeys(riskFollowingFrequency);
+
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@placeholder='跟踪频度']")));
+		} catch (TimeoutException e) {
+			Assert.fail("Risk following frequency field not found.");
 		}
+		WebElement riskFollowingFrequencyField = driver.findElement(By.xpath("//input[@placeholder='跟踪频度']"));
 
-		if (riskResponsiblePerson.length() != 0) {
-			try {
-				wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择责任人')]")));
-			} catch (TimeoutException e) {
-				Assert.fail("Risk responsible person field not found.");
-			}
-			WebElement riskResponsiblePersonField = driver.findElement(By.xpath("//div[contains(text(), '选择责任人')]/../input"));
+		riskFollowingFrequencyField.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		riskFollowingFrequencyField.sendKeys(Keys.DELETE);
+		riskFollowingFrequencyField.sendKeys(riskFollowingFrequency);
 
-			riskResponsiblePersonField.sendKeys(riskResponsiblePerson);
-			riskResponsiblePersonField.sendKeys(Keys.ENTER);
+
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择责任人')]")));
+		} catch (TimeoutException e) {
+			Assert.fail("Risk responsible person field not found.");
 		}
+		WebElement riskResponsiblePersonField = driver.findElement(By.xpath("//div[contains(text(), '选择责任人')]/../input"));
 
-		if (riskRelatedPerson.length() != 0) {
-			try {
-				wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择相关者')]")));
-			} catch (TimeoutException e) {
-				Assert.fail("Risk responsible person field not found.");
-			}
-			WebElement riskRelatedPersonField = driver.findElement(By.xpath("//div[contains(text(), '选择相关者')]/../input"));
+		riskResponsiblePersonField.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		riskResponsiblePersonField.sendKeys(Keys.DELETE);
+		riskResponsiblePersonField.sendKeys(riskResponsiblePerson);
+		riskResponsiblePersonField.sendKeys(Keys.ENTER);
 
-			riskRelatedPersonField.sendKeys(riskRelatedPerson);
-			riskRelatedPersonField.sendKeys(Keys.ENTER);
+
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择相关者')]")));
+		} catch (TimeoutException e) {
+			Assert.fail("Risk responsible person field not found.");
 		}
+		WebElement riskRelatedPersonField = driver.findElement(By.xpath("//div[contains(text(), '选择相关者')]/../input"));
+
+		riskRelatedPersonField.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		riskRelatedPersonField.sendKeys(Keys.DELETE);
+		riskRelatedPersonField.sendKeys(riskRelatedPerson);
+		riskRelatedPersonField.sendKeys(Keys.ENTER);
 
 
 		try {
