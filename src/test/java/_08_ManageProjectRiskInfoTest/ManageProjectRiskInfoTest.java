@@ -63,7 +63,7 @@ public class ManageProjectRiskInfoTest {
 		System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
 
 		ChromeOptions chromeOptions = new ChromeOptions();
-		// chromeOptions.addArguments("headless"); // Comment this line when debugging
+		chromeOptions.addArguments("headless"); // Comment this line when debugging
 		driver = new ChromeDriver(chromeOptions);
 		driver.get(BASE_URL);
 	}
@@ -209,7 +209,7 @@ public class ManageProjectRiskInfoTest {
 		} catch (TimeoutException e) {
 			Assert.fail("Risk impact level field not found.");
 		}
-		WebElement riskImpactLevelField = driver.findElement(By.xpath("//div[contains(text(), '选择风险影响度')]"));
+		WebElement riskImpactLevelField = driver.findElement(By.xpath("//div[contains(text(), '选择风险影响度')]/../input"));
 
 		riskImpactLevelField.sendKeys(Keys.chord(Keys.CONTROL, "a"));
 		riskImpactLevelField.sendKeys(Keys.DELETE);
@@ -218,11 +218,11 @@ public class ManageProjectRiskInfoTest {
 
 
 		try {
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@placeholder='策略']")));
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@placeholder='应对策略']")));
 		} catch (TimeoutException e) {
 			Assert.fail("Risk strategy field not found.");
 		}
-		WebElement riskStrategyField = driver.findElement(By.xpath("//input[@placeholder='策略']"));
+		WebElement riskStrategyField = driver.findElement(By.xpath("//input[@placeholder='应对策略']"));
 
 		riskStrategyField.sendKeys(Keys.chord(Keys.CONTROL, "a"));
 		riskStrategyField.sendKeys(Keys.DELETE);
@@ -236,18 +236,18 @@ public class ManageProjectRiskInfoTest {
 		}
 		WebElement riskStatusField = driver.findElement(By.xpath("//div[contains(text(), '选择风险状态')]/../input"));
 
-		riskStrategyField.sendKeys(Keys.chord(Keys.CONTROL, "a"));
-		riskStrategyField.sendKeys(Keys.DELETE);
+		riskStatusField.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		riskStatusField.sendKeys(Keys.DELETE);
 		riskStatusField.sendKeys(riskStatus);
 		riskStatusField.sendKeys(Keys.ENTER);
 
 
 		try {
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@placeholder='跟踪频度']")));
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择风险跟踪频度')]")));
 		} catch (TimeoutException e) {
 			Assert.fail("Risk following frequency field not found.");
 		}
-		WebElement riskFollowingFrequencyField = driver.findElement(By.xpath("//input[@placeholder='跟踪频度']"));
+		WebElement riskFollowingFrequencyField = driver.findElement(By.xpath("//div[contains(text(), '选择风险跟踪频度')]/../input"));
 
 		riskFollowingFrequencyField.sendKeys(Keys.chord(Keys.CONTROL, "a"));
 		riskFollowingFrequencyField.sendKeys(Keys.DELETE);
@@ -255,11 +255,11 @@ public class ManageProjectRiskInfoTest {
 
 
 		try {
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择责任人')]")));
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择负责人')]")));
 		} catch (TimeoutException e) {
 			Assert.fail("Risk responsible person field not found.");
 		}
-		WebElement riskResponsiblePersonField = driver.findElement(By.xpath("//div[contains(text(), '选择责任人')]/../input"));
+		WebElement riskResponsiblePersonField = driver.findElement(By.xpath("//div[contains(text(), '选择负责人')]/../input"));
 
 		riskResponsiblePersonField.sendKeys(Keys.chord(Keys.CONTROL, "a"));
 		riskResponsiblePersonField.sendKeys(Keys.DELETE);
@@ -268,11 +268,11 @@ public class ManageProjectRiskInfoTest {
 
 
 		try {
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择相关者')]")));
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(), '选择相关人员')]")));
 		} catch (TimeoutException e) {
 			Assert.fail("Risk responsible person field not found.");
 		}
-		WebElement riskRelatedPersonField = driver.findElement(By.xpath("//div[contains(text(), '选择相关者')]/../input"));
+		WebElement riskRelatedPersonField = driver.findElement(By.xpath("//div[contains(text(), '选择相关人员')]/../input"));
 
 		riskRelatedPersonField.sendKeys(Keys.chord(Keys.CONTROL, "a"));
 		riskRelatedPersonField.sendKeys(Keys.DELETE);
@@ -281,7 +281,7 @@ public class ManageProjectRiskInfoTest {
 
 
 		try {
-			WebElement submitButton = driver.findElement(By.xpath("//div[contains(text(), '提交')]"));
+			WebElement submitButton = driver.findElement(By.xpath("//div[contains(text(), '完成')]"));
 			wait.until(ExpectedConditions.elementToBeClickable(submitButton));
 			submitButton.click();
 		} catch (TimeoutException e) {
@@ -290,38 +290,38 @@ public class ManageProjectRiskInfoTest {
 
 		if (isBasic) {
 			Thread.sleep(RENDERING_TIMEOUT);
-			int rowCount = driver.findElements(By.xpath("//table[@class='ui fixed single line celled table']")).size();
+			int rowCount = driver.findElements(By.xpath("//table[@class='ui celled padded table']/tbody/tr")).size();
 
-			for (int i = 0; i < rowCount; ++i) {
-				String sCellValue = driver.findElement(By.xpath("//table[@class='ui fixed single line celled table']/tbody/tr["
-						+ (rowCount - 1) + "]/td[" + i + "]")).getText();
+			for (int i = 1; i <= 10; ++i) {
+				String sCellValue = driver.findElement(By.xpath("//table[@class='ui celled padded table']/tbody/tr["
+						+ rowCount + "]/td[" + i + "]")).getText();
 
 				switch (i) {
-					case 1:
+					case 2:
 						Assert.assertEquals(sCellValue, riskType);
 						break;
-					case 2:
+					case 3:
 						Assert.assertEquals(sCellValue, riskDescription);
 						break;
-					case 3:
+					case 4:
 						Assert.assertEquals(sCellValue, riskLevel);
 						break;
-					case 4:
+					case 5:
 						Assert.assertEquals(sCellValue, riskImpactLevel);
 						break;
-					case 5:
+					case 6:
 						Assert.assertEquals(sCellValue, riskStrategy);
 						break;
-					case 6:
+					case 7:
 						Assert.assertEquals(sCellValue, riskStatus);
 						break;
-					case 7:
-						Assert.assertEquals(sCellValue, riskResponsiblePerson);
-						break;
 					case 8:
-						Assert.assertEquals(sCellValue, riskFollowingFrequency);
+						Assert.assertEquals(sCellValue, "每周" + riskFollowingFrequency + "次");
 						break;
 					case 9:
+						Assert.assertEquals(sCellValue, riskResponsiblePerson);
+						break;
+					case 10:
 						Assert.assertEquals(sCellValue, riskRelatedPerson);
 						break;
 					default:
