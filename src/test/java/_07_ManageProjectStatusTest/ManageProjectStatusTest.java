@@ -1,7 +1,5 @@
 package _07_ManageProjectStatusTest;
 
-import common.Constants;
-import org.hamcrest.core.Every;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,7 +18,6 @@ import java.util.Collection;
 import java.util.List;
 
 import static common.Constants.*;
-import static common.Constants.BASE_URL;
 
 @RunWith(Parameterized.class)
 public class ManageProjectStatusTest {
@@ -51,14 +48,17 @@ public class ManageProjectStatusTest {
 	@Parameter(value = 12)
 	public String projectRole;
 
+	@SuppressWarnings("FieldCanBeLocal")
 	private final String projectManagerUsername = "jun28@pingmao.net";
+	@SuppressWarnings("FieldCanBeLocal")
 	private final String projectSuperiorUsername = "xiuying41@leizhu.cn";
-	private final String commonUserUsername = "jie62@hotmail.com";
+	@SuppressWarnings("FieldCanBeLocal")
 	private final String qaLeaderUsername = "gangyao@hotmail.com";
-	private final String qaLeaderID = "SYKJ-20191201-0000";
+	@SuppressWarnings("FieldCanBeLocal")
 	private final String epgLeaderUsername = "gang66@guiyingguo.cn";
-	private final String epgLeaderID = "SYKJ-20191215-0000";
+	@SuppressWarnings("FieldCanBeLocal")
 	private final String configurationManagerUsername = "mpan@hotmail.com";
+	@SuppressWarnings("FieldCanBeLocal")
 	private final String password = "password";
 
 
@@ -77,20 +77,19 @@ public class ManageProjectStatusTest {
 		System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
 
 		ChromeOptions chromeOptions = new ChromeOptions();
-		// chromeOptions.addArguments("headless"); // Comment this line when debugging
+		chromeOptions.addArguments("headless"); // Comment this line when debugging
 		driver = new ChromeDriver(chromeOptions);
 		driver.get(BASE_URL);
 	}
 
-	void SignIn(String username, String password) {
+	void SignIn(String username, @SuppressWarnings("SameParameterValue") String password) {
 		WebDriverWait buttonWait = new WebDriverWait(driver, TIMEOUT_IN_SECONDS);
-		try{
+		try {
 			buttonWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@href='/login']")));
-		}catch (TimeoutException e){
+		} catch (TimeoutException e) {
 			Assert.fail("Login button not found.");
 		}
 		WebElement goToSignInPage = driver.findElement(By.xpath("//a[@href='/login']"));
-
 
 
 		// Wait until the "login" button is clickable
@@ -346,7 +345,7 @@ public class ManageProjectStatusTest {
 		}
 	}
 
-	void ApproveProject() throws InterruptedException {
+	void ApproveProject() {
 		WebDriverWait wait = new WebDriverWait(driver, TIMEOUT_IN_SECONDS);
 
 		WebElement projectTopButton = driver.findElement(By.xpath("//a[@href='/project']"));
@@ -636,7 +635,7 @@ public class ManageProjectStatusTest {
 		}
 	}
 
-	void PushForwardProjectStatus() throws InterruptedException {
+	void PushForwardProjectStatus() {
 		WebDriverWait wait = new WebDriverWait(driver, TIMEOUT_IN_SECONDS);
 
 		WebElement projectTopButton = driver.findElement(By.xpath("//a[@href='/project']"));
@@ -726,8 +725,6 @@ public class ManageProjectStatusTest {
 
 	@Test
 	public void ManageProjectStatus() throws Exception {
-		WebDriverWait wait = new WebDriverWait(driver, TIMEOUT_IN_SECONDS);
-
 		//	Apply Project
 		SignIn(projectManagerUsername, password);
 		ApplyProject();
