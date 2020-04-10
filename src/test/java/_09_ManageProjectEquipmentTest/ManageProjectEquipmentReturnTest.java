@@ -20,8 +20,7 @@ import static common.Constants.*;
 
 
 @RunWith(Parameterized.class)
-public class ManageProjectEquipmentLendTest {
-
+public class ManageProjectEquipmentReturnTest {
 	@Parameter()
 	public boolean isBasic;
 	@Parameter(value = 1)
@@ -44,11 +43,8 @@ public class ManageProjectEquipmentLendTest {
 	@Parameterized.Parameters(name = "{index}, isBasic = {0}, propertyID = {1}, logTime = {2}, returnTime = {3}")
 	public static Collection<Object[]> testData() {
 		return Arrays.asList(new Object[][]{
-				{false, "", "2020-04-02 12:00:00", "2020-05-01 12:00:00"},
-				{false, "290102211596255233", "", "2020-05-01 12:00:00"},
-				{false, "290102211596255233", "2020-04-02 12:00:00", ""},
-				{false, "290102211596255233", "2020-04-02 12:00:00", "2020-04-01 12:00:00"},
 				{true, "290102211596255233", "2020-04-02 12:00:00", "2020-05-01 12:00:00"},
+				{false, "290102211596255233", "2020-04-02 12:00:00", "2020-05-01 12:00:00"},
 		});
 	}
 
@@ -104,9 +100,7 @@ public class ManageProjectEquipmentLendTest {
 		}
 	}
 
-	@Test
-	public void ManageProjectEquipmentLend() {
-		SignIn(projectManagerUsername, password);
+	void LogDevice() {
 		WebDriverWait wait = new WebDriverWait(driver, TIMEOUT_IN_SECONDS);
 		WebElement projectTopButton = driver.findElement(By.xpath("//a[@href='/project']"));
 		try {
@@ -188,34 +182,120 @@ public class ManageProjectEquipmentLendTest {
 			Assert.fail("Apply device button not clickable.");
 		}
 
-		if (isBasic) {
-			try {
-				wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[text() = '" + propertyID + "']/../td[text() = 'LentOut']")));
-			} catch (TimeoutException e) {
-				Assert.fail("Not properly logged.");
-			}
-			LogOut();
-		} else {
-			try {
-				wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("negative")));
-				wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("close")));
-				WebElement closeIcon = driver.findElement(By.className("close"));
-				wait.until(ExpectedConditions.elementToBeClickable(closeIcon));
-				closeIcon.click();
-			} catch (TimeoutException e) {
-				Assert.fail("Error message not shown properly.");
-			}
-
-			WebElement cancelButton = driver.findElement(By.xpath("//div[text() = '取消']"));
-			cancelButton.click();
-
-			LogOut();
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[text() = '" + propertyID + "']/../td[text() = 'LentOut']")));
+		} catch (TimeoutException e) {
+			Assert.fail("Not properly logged.");
 		}
 	}
 
-	@After
-	public void tearDown() {
-		driver.close();
-		driver.quit();
+	void VerifyDeviceStatus(String status) {
+		WebDriverWait wait = new WebDriverWait(driver, TIMEOUT_IN_SECONDS);
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[text() = '" + propertyID + "']/../td[text() = '" + status + "']")));
+		} catch (TimeoutException e) {
+			Assert.fail("Device status not correct.");
+		}
+	}
+
+	void ReturnDevice() {
+		WebDriverWait wait = new WebDriverWait(driver, TIMEOUT_IN_SECONDS);
+
+		WebElement returnButton = driver.findElement(By.xpath("//td[text() = '" + propertyID + "']/../td[4]/i"));
+
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(returnButton));
+			returnButton.click();
+		} catch (TimeoutException e) {
+			Assert.fail("Return button not clickable.");
+		}
+
+		WebElement submitButton = driver.findElement(By.xpath("//div[text() = '完成']"));
+		submitButton.click();
+	}
+
+	void CheckDevice(boolean isMalfunctioned) {
+		WebDriverWait wait = new WebDriverWait(driver, TIMEOUT_IN_SECONDS);
+		WebElement projectTopButton = driver.findElement(By.xpath("//a[@href='/project']"));
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(projectTopButton));
+			projectTopButton.click();
+		} catch (TimeoutException e) {
+			Assert.fail("Project top button not clickable.");
+		}
+
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(text(), '" + projectID + "')]/../td[4]/a")));
+		} catch (TimeoutException e) {
+			Assert.fail("Project row not found.");
+		}
+
+		WebElement projectDetailButton = driver.findElement(By.xpath("//td[contains(text(), '" + projectID + "')]/../td[4]/a"));
+		projectDetailButton.click();
+
+		WebElement projectDeviceTab = driver.findElement(By.xpath("//a[@href='/projectDevice']"));
+		projectDeviceTab.click();
+
+		try {
+			wait.until(ExpectedConditions.urlToBe(BASE_URL + "projectDevice"));
+		} catch (TimeoutException e) {
+			Assert.fail("Not jumped to project device page.");
+		}
+
+		WebElement manageButton = driver.findElement(By.xpath("//td[text() = '" + propertyID + "']/../td[4]/i"));
+
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(manageButton));
+			manageButton.click();
+		} catch (TimeoutException e) {
+			Assert.fail("Manage button not clickable.");
+		}
+
+		if (isMalfunctioned) {
+			WebElement deviceMalfunctioningSelection = driver.findElement(By.xpath("//label[text() = '有异常']"));
+			WebElement confirmButton = driver.findElement(By.xpath("//div[contains(text(), '完成')]"));
+			try {
+				wait.until(ExpectedConditions.elementToBeClickable(deviceMalfunctioningSelection));
+				wait.until(ExpectedConditions.elementToBeClickable(confirmButton));
+				deviceMalfunctioningSelection.click();
+				confirmButton.click();
+			} catch (TimeoutException e) {
+				Assert.fail("The project cannot be approved.");
+			}
+		} else {
+			WebElement deviceMalfunctioningSelection = driver.findElement(By.xpath("//label[text() = '无异常']"));
+			WebElement confirmButton = driver.findElement(By.xpath("//div[contains(text(), '完成')]"));
+			try {
+				wait.until(ExpectedConditions.elementToBeClickable(deviceMalfunctioningSelection));
+				wait.until(ExpectedConditions.elementToBeClickable(confirmButton));
+				deviceMalfunctioningSelection.click();
+				confirmButton.click();
+			} catch (TimeoutException e) {
+				Assert.fail("The project cannot be approved.");
+			}
+		}
+	}
+
+	@Test
+	public void ManageProjectEquipmentReturn() throws Exception {
+		SignIn(projectManagerUsername, password);
+		LogDevice();
+		VerifyDeviceStatus("LentOut");
+		ReturnDevice();
+		VerifyDeviceStatus("ToBeChecked");
+		LogOut();
+
+
+		SignIn(configurationManagerUsername, password);
+		CheckDevice(true);
+		VerifyDeviceStatus("Maintaining");
+		if (isBasic) {
+			CheckDevice(false);
+		} else {
+			CheckDevice(true);
+			VerifyDeviceStatus("Scrapped");
+		}
+
+		LogOut();
 	}
 }
