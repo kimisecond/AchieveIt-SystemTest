@@ -298,4 +298,10 @@ public class ManageProjectEquipmentReturnTest {
 
 		LogOut();
 	}
+
+	@After
+	public void tearDown() {
+		driver.close();
+		driver.quit();
+	}
 }
